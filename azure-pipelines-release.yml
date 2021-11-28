@@ -13,9 +13,8 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   dotNetFramework: 'net6.0'
-  
+
 steps:
-- task: NuGetToolInstaller@1
 
 - task: DotNetCoreCLI@2
   displayName: Publish
