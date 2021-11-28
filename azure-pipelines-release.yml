@@ -28,7 +28,7 @@ steps:
   displayName: Azure Push
   inputs:
     ConnectionType: 'AzureRM'
-    azureSubscription: 'Pay-As-You-Go(4bb05423-80e3-404d-86f3-59bcbc47a7e7)'
+    azureSubscription: 'Blazor-Base64Guid'
     appType: 'webAppLinux'
     WebAppName: 'Base64Guid'
     packageForLinux: '$(Build.ArtifactStagingDirectory)/**/*.zip'
