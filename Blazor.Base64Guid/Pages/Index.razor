@@ -1,0 +1,181 @@
+﻿@page "/"
+@using System.Text
+
+<PageTitle>Base64 a GUID by type.</PageTitle>
+
+<div class="container">
+    <div class="row">
+        <div class="col-l">
+            <h1>Base64 encode / decode GUIDs</h1>
+            <br /><br />
+            Although this converter was created along with the
+            <a href="MongoDB Compass, filter by GUID" target="_blank" class="link-primary text-decoration-none">MongoDB Compass, filter by GUID</a> blog post
+            from <a href="https://blog.georgekosmidis.net/findme.html" target="_blank" class="link-primary text-decoration-none">George Kosmidis</a>,
+            it is not specifically about MongoDB. On the contrary, <strong>it is only about <mark>MongoDB</mark> if GUIDs are used instead of the native <code>ObjectId()</code></strong>.
+            <br /><br />
+            The problem started because <mark>Base64</mark> converters out there are converting the string representation of a
+            <mark>GUID</mark> to <mark>Base64</mark>, which is not the same as converting the byte array of a <mark>GUID</mark> to <mark>Base64</mark>.
+            <br /><br />
+            It's made with <strong>Blazor WebAssembly</strong> so feel free to play around; your browser is doing all the work not my Azure subscription :)
+            <br /><br />
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-1">
+            &nbsp;
+        </div>
+        <div class="col-md-10 bg-light border border-info rounded">
+            <h2><span class="badge bg-info text-dark">To Base64</span></h2>
+            <div>Paste here a GUID, for example <code>90cd3a60-a8e3-4708-aefc-e8c6d2cdcbbb</code>:</div>
+            <div class="mb-12 input-group mb-3 mt-3">
+                <input type="text" class="form-control" id="inputToBase64" @bind="InputGuid" @bind:event="oninput" placeholder="00000000-0000-0000-0000-00000000">
+                <button type="button" class="btn btn-primary" onclick="@(() => OnEncode())">Convert</button>
+            </div>
+            <div class="mb-12 input-group">
+                <div class="alert alert-warning" role="alert" style="display:@WarningGuidVisibility">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+                        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                    </svg>
+                    <div>
+                        You need a valid GUID, like in the format <code>00000000-0000-0000-0000-00000000</code>!
+                    </div>
+                </div>
+            </div>
+            <div class="mb-12">
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="guid1">Base64:</span>
+                    <input type="text" class="form-control" value="@OutputBase64" aria-describedby="guid1" readonly>
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="guid2">MongoDB filter:</span>
+                    <input type="text" class="form-control" value="@OutputBase64Code" aria-describedby="guid2" readonly>
+                </div>
+            </div>
+        </div>
+        <div class="col-1">
+            &nbsp;
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            &nbsp;
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-1">
+            &nbsp;
+        </div>
+        <div class="col-md-10 bg-light border border-info rounded">
+            <h2><span class="badge bg-info text-dark">From Base64</span></h2>
+            <div>Paste here a valid Base64-ed GUID, for example, get the <code>H5wrBZJG20Sm0QAB9rwv6A==</code> part from a record in MongoDB <code>_id : Binary('H5wrBZJG20Sm0QAB9rwv6A==', 3)</code>:</div>
+            <div class="mb-12 input-group mb-3 mt-3">
+                <input type="text" class="form-control" id="inputFromBase64" @bind="InputBase64" @bind:event="oninput" placeholder="AAAAAAAAAAAAAAAAAAAAAA==">
+                <button type="button" class="btn btn-primary" onclick="@(() => OnDecode())">Convert</button>
+            </div>
+            <div class="mb-12 input-group">
+                <div class="alert alert-warning " role="alert" style="display:@WarningBase64Visibility">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+                        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                    </svg>
+                    <div>
+                        String was either not a valid Base64 encoded string, or not a valid GUID!
+                    </div>
+                </div>
+            </div>
+            <div class="mb-12">
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="guid3">GUID:</span>
+                    <input type="text" class="form-control" value="@OutputGuid" aria-describedby="guid3" readonly>
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="guid4">C# Sample:</span>
+                    <input type="text" class="form-control" value="@OutputGuidCode" aria-describedby="guid4" readonly>
+                </div>
+            </div>
+        </div>
+        <div class="col-1">
+            &nbsp;
+        </div>
+    </div>
+</div>
+
+
+@code {
+
+    private string WarningGuidVisibility { get; set; } = "none";
+    private string? InputGuid { get; set; }
+    private string? OutputBase64 { get; set; }
+    private string? OutputBase64Code { get; set; }
+
+    private string WarningBase64Visibility { get; set; } = "none";
+    private string? InputBase64 { get; set; }
+    private string? OutputGuid { get; set; }
+    private string? OutputGuidCode { get; set; }
+
+    protected override void OnInitialized()
+    {
+
+    }
+
+    void OnEncode()
+    {
+        WarningGuidVisibility = "none";
+        if (String.IsNullOrWhiteSpace(InputGuid))
+        {
+            return;
+        }
+
+        if (Guid.TryParse(InputGuid.Trim(), out var parsedGuid))
+        {
+            OutputBase64 = Convert.ToBase64String(parsedGuid.ToByteArray());
+            OutputBase64Code = "{ \"_id\" : BinData(3,\"" + OutputBase64 + "\")";
+        }
+        else
+        {
+            WarningGuidVisibility = "block";
+        }
+    }
+
+    void OnDecode()
+    {
+        WarningBase64Visibility = "none";
+
+        if (String.IsNullOrWhiteSpace(InputBase64))
+        {
+            return;
+        }
+
+        var bytes = new Span<byte>(new byte[256]);
+
+        if (Convert.TryFromBase64String(InputBase64, bytes, out int bytesWritten))
+        {
+            //try guid as string
+            var c = Encoding.UTF8.GetChars(bytes.Slice(0, bytesWritten).ToArray());
+            var s = new string(c);
+            if (Guid.TryParse(s.Trim(), out var parsedGuid))
+            {
+                OutputGuid = parsedGuid.ToString();
+                OutputGuidCode = "var guid = new Guid(\"" + OutputGuid + "\");";
+                return;
+            }
+
+            //try guid as byte array
+            try
+            {
+                OutputGuid = new Guid(bytes.Slice(0, bytesWritten).ToArray()).ToString();
+                OutputGuidCode = "var guid = new Guid(\"" + OutputGuid + "\");";
+            }
+            catch (ArgumentException)
+            {
+                WarningBase64Visibility = "block";
+            }
+        }
+        else
+        {
+            WarningBase64Visibility = "visible";
+        }
+
+    }
+}
