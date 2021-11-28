@@ -16,7 +16,7 @@ variables:
 
 steps:
 - task: UseDotNet@2
-  displayName: Publish
+  displayName: Install .NET 6
   inputs:
     packageType: 'sdk'
     version: '6.0.x'  
@@ -26,7 +26,7 @@ steps:
   inputs:
     command: 'publish'
     publishWebProjects: true
-    arguments: '--configuration $(buildConfiguration)  --framework $(dotNetFramework) --output $(Build.ArtifactStagingDirectory)/'
+    arguments: '--configuration $(buildConfiguration) --framework $(dotNetFramework) --output $(Build.ArtifactStagingDirectory)/'
 
 
 - task: AzureRmWebAppDeployment@4
