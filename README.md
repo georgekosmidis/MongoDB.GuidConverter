@@ -1,4 +1,4 @@
-# Base64 Encoding / Decoding GUID bytes
+# Base64 Encoding / Decoding GUID bytes with Blazor WebAssembly
 
 Although this converter was created along with the [MongoDB Shell or Compass query with a GUID](https://blog.georgekosmidis.net/2021/11/29/mongodb-shell-or-compass-query-with-a-guid/) blog post, it is not specifically about MongoDB. On the contrary, it is only about MongoDB if GUIDs are used instead of the native `ObjectId()`.
 
