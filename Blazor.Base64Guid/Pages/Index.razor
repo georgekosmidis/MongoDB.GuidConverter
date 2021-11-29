@@ -130,7 +130,7 @@
         if (Guid.TryParse(InputGuid.Trim(), out var parsedGuid))
         {
             OutputBase64 = Convert.ToBase64String(parsedGuid.ToByteArray());
-            OutputBase64Code = "{ \"_id\" : BinData(3,\"" + OutputBase64 + "\")";
+            OutputBase64Code = "{ \"_id\" : BinData(3,\"" + OutputBase64 + "\") }";
         }
         else
         {
